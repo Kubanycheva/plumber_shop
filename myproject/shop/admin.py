@@ -13,18 +13,13 @@ class СompanyProfileImageInline(admin.TabularInline):
     extra = 1
 
 
-class ServicesProfileImageInline(admin.TabularInline):
-    model = ServicesProfileImage
-    extra = 1
-
-
 class Contact_InfoInline(admin.TabularInline):
     model = Contact_Info
     extra = 1
 
 
-class GalleryInline(admin.TabularInline):
-    model = Gallery
+class GlavnyiImageInline(admin.TabularInline):
+    model = GlavnyiImage
     extra = 1
 
 
@@ -45,7 +40,6 @@ class СompanyProfileAdmin(TranslationAdmin):
 
 @admin.register(Services)
 class ServicesAdmin(TranslationAdmin):
-    inlines = [ServicesProfileImageInline]
 
     class Media:
         js = (
@@ -73,9 +67,9 @@ class MasterAdmin(TranslationAdmin):
         }
 
 
-@admin.register(GlavnyiImage)
+@admin.register(Gallery)
 class GlavnyiImageAdmin(TranslationAdmin):
-    inlines = [GalleryInline]
+    inlines = [GlavnyiImageInline]
 
     class Media:
         js = (
@@ -88,8 +82,16 @@ class GlavnyiImageAdmin(TranslationAdmin):
         }
 
 
+class CartItemInlines(admin.TabularInline):
+    model = CartItem
+    extra = 1
+
+
+class CartAdmin(admin.ModelAdmin):
+    inlines = [CartItemInlines]
+
+
 admin.site.register(User)
 admin.site.register(Catalog)
 admin.site.register(Review)
-admin.site.register(Cart)
-admin.site.register(CartItem)
+admin.site.register(Cart, CartAdmin)

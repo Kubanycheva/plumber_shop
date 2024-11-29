@@ -1,4 +1,4 @@
-from .models import Services, СompanyProfile, Master, GlavnyiImage
+from .models import *
 from modeltranslation.translator import TranslationOptions, register
 
 
@@ -17,7 +17,7 @@ class MasterTranslationOptions(TranslationOptions):
     fields = ('master_name', 'description')
 
 
-@register(GlavnyiImage)
-class GlavnyiImageTranslationOptions(TranslationOptions):
+@register(Gallery)
+class GalleryTranslationOptions(TranslationOptions):
     fields = ('work_name', 'description')
 
