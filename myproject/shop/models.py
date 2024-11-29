@@ -1,11 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
-from django.core.validators import MinValueValidator,MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class User(AbstractUser):
-    age = models.PositiveIntegerField(validators=[MaxValueValidator(90), MinValueValidator(10)])
+    age = models.SmallIntegerField(validators=[MaxValueValidator(80),
+                                               MinValueValidator(18)], null=True, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True, region='KG')  # Админ
 
     def __str__(self):
@@ -30,7 +31,7 @@ class ContactInfo(models.Model):
 
 
 class СompanyProfileImage(models.Model):
-    company_image = models.ForeignKey(СompanyProfile, on_delete=models.CASCADE, related_name='company_images')
+    company_image = models.ForeignKey(СompanyProfile, on_delete=models.CASCADE, related_name='company_profile_images')
     image = models.ImageField(upload_to='company_image')  #Изображения компании
 
 
@@ -38,14 +39,14 @@ class Services(models.Model):
     servicesImage = models.ImageField(upload_to='services_image')
     services_name = models.CharField(max_length=16)   #Услуги
     price = models.PositiveSmallIntegerField()
-    description = models.TextField
+    description = models.TextField()
 
     def __str__(self):
         return f'{self.servicesImage} - {self.services_name}'
 
 
 class ServicesProfileImage(models.Model):
-    company_image = models.ForeignKey(СompanyProfile, on_delete=models.CASCADE, related_name='services_images')
+    services_image = models.ForeignKey(Services, on_delete=models.CASCADE, related_name='services_images')
     image = models.ImageField(upload_to='services_image')  #изображения услугии
 
 
@@ -59,11 +60,6 @@ class Catalog(models.Model):
         return f'{self.catalogImage} - {self.catalog_name}'
 
 
-class СatalogProfileImage(models.Model):
-    company_image = models.ForeignKey(СompanyProfile, on_delete=models.CASCADE, related_name='company_images')
-    image = models.ImageField(upload_to='company_image', null=True, blank=True)  #Каталог изображения
-
-
 class Master(models.Model):
     master_name = models.CharField(max_length=16)
     image = models.ImageField(upload_to='master_image')  #Мастер
@@ -73,7 +69,7 @@ class Master(models.Model):
         return self.master_name
 
 
-class ContactInfo(models.Model):
+class Contact_Info(models.Model):
     contact_info = PhoneNumberField()
     Master = models.ForeignKey(Master, on_delete=models.CASCADE)
 
@@ -81,21 +77,22 @@ class ContactInfo(models.Model):
         return f'{self.Master}, {self.contact_info}'
 
 
-class Image(models.Model):
-    image = models.ImageField(upload_to='image')  #Изображения
+class GlavnyiImage(models.Model):
+    work_name = models.CharField(max_length=32, null=True, blank=True)
+    description = models.TextField()#Изображения
 
 
 class Gallery(models.Model):
-    company_image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='images')
+    gallery_image = models.ForeignKey(GlavnyiImage, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='image', null=True, blank=True) #Галлерея
 
 
 class Review(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
-    servise = models.ForeignKey(Services, on_delete=models.CASCADE, related_name='service_name', null=True, blank=True)
-    master = models.ForeignKey(Master, on_delete=models.CASCADE, related_name='master_name', null=True, blank=True)
+    servise = models.ForeignKey(Services, on_delete=models.CASCADE, related_name='service_name_service', null=True, blank=True)
+    master = models.ForeignKey(Master, on_delete=models.CASCADE, related_name='master_name_master', null=True, blank=True)
     comment = models.TextField()
-    crated_date = models.DateTimeField(auto_now_add=True)  # Галлерея
+    crated_date = models.DateTimeField(auto_now_add=True)  # Комментарии
 
     def __str__(self):
         return f'{self.comment} - {self.crated_date}'
@@ -110,15 +107,15 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.
-    servise
-    quantity
-    total_price
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
+    servise = models.ForeignKey(Services, on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField(default=1) # Вторая корзина
+
+    def get_total_price(self):
+        return self.product.price * self.quantity
 
 #
 # DRF.
-# Env
-# Language
 # Filter (сatalog)
 # Order (price)
 # Sagger
