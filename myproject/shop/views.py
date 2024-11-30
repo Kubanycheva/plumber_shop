@@ -59,6 +59,7 @@ class CartViewSet(generics.ListAPIView):
     def get_queryset(self):
         return Cart.objects.filter(user=self.request.user)
 
+
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializers

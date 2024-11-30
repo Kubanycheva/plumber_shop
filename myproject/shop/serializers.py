@@ -8,14 +8,10 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ['first_name', 'last_name']
 
 
-
-
-
 class СompanyProfileImageSerializers(serializers.ModelSerializer):
     class Meta:
         model = СompanyProfileImage
         fields = ['image']
-
 
 
 class CompanyProfileSerializers(serializers.ModelSerializer):
@@ -74,7 +70,6 @@ class CartItemSerializers(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ['servise', 'quantity']
-
 
 
 class CartSerializers(serializers.ModelSerializer):

@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'shop',
     "phonenumber_field",
     'rest_framework_swagger',
-    'drf_yasg',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
