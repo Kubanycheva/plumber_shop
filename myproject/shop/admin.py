@@ -3,11 +3,6 @@ from .models import *
 from modeltranslation.admin import TranslationAdmin, TranslationInlineModelAdmin
 
 
-class ContactInfoInline(admin.TabularInline):
-    model = ContactInfo
-    extra = 1
-
-
 class СompanyProfileImageInline(admin.TabularInline):
     model = СompanyProfileImage
     extra = 1
@@ -25,7 +20,7 @@ class GlavnyiImageInline(admin.TabularInline):
 
 @admin.register(СompanyProfile)
 class СompanyProfileAdmin(TranslationAdmin):
-    inlines = [ContactInfoInline, СompanyProfileImageInline]
+    inlines = [СompanyProfileImageInline, Contact_InfoInline]
 
     class Media:
         js = (
@@ -82,16 +77,6 @@ class GlavnyiImageAdmin(TranslationAdmin):
         }
 
 
-class CartItemInlines(admin.TabularInline):
-    model = CartItem
-    extra = 1
-
-
-class CartAdmin(admin.ModelAdmin):
-    inlines = [CartItemInlines]
-
 
 admin.site.register(User)
-admin.site.register(Catalog)
 admin.site.register(Review)
-admin.site.register(Cart, CartAdmin)

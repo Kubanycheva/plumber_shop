@@ -1,18 +1,10 @@
 from django.urls import path, include
 from .views import *
-from rest_framework import routers
-
-router = routers.DefaultRouter()
-router.register(r'user', UserViewSet, basename='users')
-router.register(r'company', СompanyProfileViewSet, basename='company_profile')
-router.register(r'services', ServicesViewSet, basename='services')
-router.register(r'catalog', CatalogViewSet, basename='catalog')
-router.register(r'master', MasterViewSet, basename='master')
-router.register(r'review', ReviewViewSet, basename='reviews')
-router.register(r'contacts', ContactInfoViewSet, basename='contacts')
-
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('cart/', CartViewSet.as_view(), name='cart')
+    path('company/', СompanyProfileViewSet.as_view(), name='company-profile'),
+    path('service/', ServicesViewSet.as_view(), name='service'),
+    path('master/', MasterViewSet.as_view(), name='master'),
+    path('reviews/', ReviewListCreateAPIView.as_view(), name='review-list-create'),
+    path('reviews/<int:pk>/', ReviewDestroyAPIView.as_view(), name='review-destroy'),
 ]

@@ -1,6 +1,7 @@
+from rest_framework.exceptions import PermissionDenied
 from .models import *
 from .serializers import *
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -8,61 +9,57 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializers
 
 
-class СompanyProfileViewSet(viewsets.ModelViewSet):
+class СompanyProfileViewSet(generics.ListAPIView):
     queryset = СompanyProfile.objects.all()
     serializer_class = CompanyProfileSerializers
 
 
-class ContactInfoViewSet(viewsets.ModelViewSet):
-    queryset = ContactInfo.objects.all()
-    serializer_class = ContactInfoSerializers
-
-
-class СompanyProfileImageViewSet(viewsets.ModelViewSet):
+class СompanyProfileImageViewSet(generics.ListAPIView):
     queryset = СompanyProfileImage.objects.all()
     serializer_class = СompanyProfileImageSerializers
 
 
-class ServicesViewSet(viewsets.ModelViewSet):
+class ServicesViewSet(generics.ListAPIView):
     queryset = Services.objects.all()
     serializer_class = ServicesSerializers
 
-
-class CatalogViewSet(viewsets.ModelViewSet):
-    queryset = Catalog.objects.all()
-    serializer_class = CatalogSerializers
-
-
-class MasterViewSet(viewsets.ModelViewSet):
+class MasterViewSet(generics.ListAPIView):
     queryset = Master.objects.all()
     serializer_class = MasterSerializers
 
 
-class GlavnyiImageViewSet(viewsets.ModelViewSet):
+class GlavnyiImageViewSet(generics.ListAPIView):
     queryset = GlavnyiImage.objects.all()
     serializer_class = GlavnyiImageSerializers
 
 
-class GalleryViewSet(viewsets.ModelViewSet):
+class GalleryViewSet(generics.ListAPIView):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializers
 
 
-class ReviewViewSet(viewsets.ModelViewSet):
+
+class ReviewListCreateAPIView(generics.ListCreateAPIView):
+    """
+    Представление для получения списка комментариев и создания нового.
+    """
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializers
+    permission_classes = [permissions.AllowAny]  # Все могут читать и создавать
+
+
+class ReviewDestroyAPIView(generics.RetrieveDestroyAPIView):
+    """
+    Представление для удаления комментария.
+    Удалять может только автор комментария.
+    """
     queryset = Review.objects.all()
     serializer_class = ReviewSerializers
 
-
-class CartViewSet(generics.ListAPIView):
-    serializer_class = CartSerializers
-
-    def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
-
-class CartItemViewSet(viewsets.ModelViewSet):
-    queryset = CartItem.objects.all()
-    serializer_class = CartItemSerializers
-
-
-    def get_queryset(self):
-        return CartItem.objects.filter(cart__user=self.request.user)
+    def perform_destroy(self, instance):
+        # Проверяем, что имя автора совпадает с переданным
+        author_name = self.request.data.get('username', '').strip()
+        if instance.author_name != author_name:
+            raise PermissionDenied("You can only delete your own comments. " 
+                                   "Вы можете удалять только свои собственные комментарии")
+        instance.delete()
