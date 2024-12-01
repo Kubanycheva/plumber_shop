@@ -8,9 +8,6 @@ class UserSerializers(serializers.ModelSerializer):
         fields = ['first_name', 'last_name']
 
 
-
-
-
 class СompanyProfileImageSerializers(serializers.ModelSerializer):
     class Meta:
         model = СompanyProfileImage
