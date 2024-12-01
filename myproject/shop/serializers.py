@@ -21,22 +21,10 @@ class CompanyProfileSerializers(serializers.ModelSerializer):
         fields = ['company_name', 'company_profile_images', 'description']
 
 
-class ContactInfoSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ContactInfo
-        fields = ['contact_info']
-
-
 class ServicesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Services
         fields = ['services_name', 'servicesImage', 'price']
-
-
-class CatalogSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Catalog
-        fields = ['catalog_name', 'catalogImage', 'price']
 
 
 class MasterSerializers(serializers.ModelSerializer):
@@ -64,24 +52,6 @@ class ReviewSerializers(serializers.ModelSerializer):
         model = Review
         fields = ['client', 'servise', 'master', 'comment', 'crated_date']
 
-
-class CartItemSerializers(serializers.ModelSerializer):
-    servise = ServicesSerializers(read_only=True)
-    class Meta:
-        model = CartItem
-        fields = ['servise', 'quantity']
-
-
-class CartSerializers(serializers.ModelSerializer):
-    items = CartItemSerializers(read_only=True, many=True)
-    total_price = serializers.SerializerMethodField()
-    user = UserSerializers(read_only=True)
-    class Meta:
-        model = Cart
-        fields = ['user', 'total_price', 'items']
-
-    def get_total_price(self, obj):
-        return obj.get_total_price()
 
 
 # class MainPage(serializers.ModelSerializer):
