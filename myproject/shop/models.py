@@ -1,68 +1,51 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
-from django.core.validators import MinValueValidator, MaxValueValidator
-
-
-class User(AbstractUser):
-    age = models.SmallIntegerField(validators=[MaxValueValidator(80),
-                                               MinValueValidator(18)], null=True, blank=True)
-    phone_number = PhoneNumberField(null=True, blank=True, region='KG')  # Админ
-
-    def __str__(self):
-        return self.first_name
 
 
 class СompanyProfile(models.Model):
     company_name = models.CharField(max_length=16)
     description = models.TextField()
+    experience = models.SmallIntegerField()
+    masters = models.SmallIntegerField()
+    clients = models.SmallIntegerField()
+    image = models.ImageField(upload_to='company_image/', null=True, blank=True)
 
     def __str__(self):
         return self.company_name
 
-
-class СompanyProfileImage(models.Model):
-    company_image = models.ForeignKey(СompanyProfile, on_delete=models.CASCADE, related_name='company_profile_images')
-    image = models.ImageField(upload_to='company_image', null=True, blank=True)  #Изображения компании
-
-
-class Services(models.Model):
-    servicesImage = models.ImageField(upload_to='services_image', null=True, blank=True)
-    services_name = models.CharField(max_length=16)   #Услуги
-    price = models.PositiveSmallIntegerField()
-    description = models.TextField()
-
-
-    def __str__(self):
-        return f'{self.servicesImage} - {self.services_name}'
-
-
 class Master(models.Model):
+    service = models.CharField(max_length=32)
     master_name = models.CharField(max_length=16)
     image = models.ImageField(upload_to='master_image', null=True, blank=True)  #Мастер
     description = models.TextField()
+    company = models.ForeignKey(СompanyProfile, on_delete=models.CASCADE, related_name='company')
 
     def __str__(self):
-        return self.master_name
+         return self.master_name
+
+
+class Services(models.Model):
+    master = models.ForeignKey(Master, on_delete=models.CASCADE, related_name='services')
+    services_name = models.CharField(max_length=16)   #Услуги
+    description = models.TextField()
+
+    def __str__(self):
+        return self.services_name
+
+
+class Servise_type(models.Model):
+    service = models.ForeignKey(Services, on_delete=models.CASCADE)
+    service_type = models.CharField(max_length=65)
+    price = models.PositiveSmallIntegerField()
 
 
 class Contact_Info(models.Model):
+    name = models.CharField(max_length=32)
     contact_info = PhoneNumberField()
-    Master = models.ForeignKey(Master, on_delete=models.CASCADE)
-    companyProfile = models.ForeignKey(СompanyProfile, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.Master}, {self.contact_info}'
-
-
-class Gallery(models.Model):
-    work_name = models.CharField(max_length=32, null=True, blank=True)
     description = models.TextField()
 
-
-class GlavnyiImage(models.Model):
-    image = models.ImageField(upload_to='image', null=True, blank=True) #Галлерея
-    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, related_name='gallery')
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Review(models.Model):

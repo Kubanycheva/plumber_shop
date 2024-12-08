@@ -16,8 +16,3 @@ class СompanyProfileTranslationOptions(TranslationOptions):
 class MasterTranslationOptions(TranslationOptions):
     fields = ('master_name', 'description')
 
-
-@register(Gallery)
-class GalleryTranslationOptions(TranslationOptions):
-    fields = ('work_name', 'description')
-

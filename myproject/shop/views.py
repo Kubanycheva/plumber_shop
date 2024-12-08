@@ -4,40 +4,34 @@ from .serializers import *
 from rest_framework import viewsets, generics, permissions
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializers
-
-
 class СompanyProfileViewSet(generics.ListAPIView):
     queryset = СompanyProfile.objects.all()
     serializer_class = CompanyProfileSerializers
 
 
-class СompanyProfileImageViewSet(generics.ListAPIView):
-    queryset = СompanyProfileImage.objects.all()
-    serializer_class = СompanyProfileImageSerializers
+class СompanySimpleProfileViewSet(generics.ListAPIView):
+    queryset = СompanyProfile.objects.all()
+    serializer_class = CompanySimpleProfileSerializers
 
 
 class ServicesViewSet(generics.ListAPIView):
     queryset = Services.objects.all()
     serializer_class = ServicesSerializers
 
+
+class ServicesMoreViewSet(generics.ListAPIView):
+    queryset = Servise_type.objects.all()
+    serializer_class = ServiceMoreSerializers
+
+
 class MasterViewSet(generics.ListAPIView):
     queryset = Master.objects.all()
     serializer_class = MasterSerializers
 
 
-class GlavnyiImageViewSet(generics.ListAPIView):
-    queryset = GlavnyiImage.objects.all()
-    serializer_class = GlavnyiImageSerializers
-
-
-class GalleryViewSet(generics.ListAPIView):
-    queryset = Gallery.objects.all()
-    serializer_class = GallerySerializers
-
-
+class ReviewListAPIView(generics.ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewGetSerializers
 
 class ReviewListCreateAPIView(generics.ListCreateAPIView):
     """
