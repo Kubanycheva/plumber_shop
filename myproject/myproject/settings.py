@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'modeltranslation',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,7 +49,8 @@ INSTALLED_APPS = [
     'shop',
     "phonenumber_field",
     'rest_framework_swagger',
-    'drf_yasg'
+    'drf_yasg',
+
 ]
 
 MIDDLEWARE = [
